@@ -1,23 +1,20 @@
-import os
 import gc
-import datetime
+
 import numpy as np
 import pandas as pd
-
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import roc_auc_score
-
-from keras.models import Model
-from keras.layers import Dense, Input, Embedding, Dropout, Activation, Reshape, Flatten
-from keras.layers.merge import concatenate, dot, add, multiply
-from keras.layers.normalization import BatchNormalization
-from keras.layers.advanced_activations import LeakyReLU, PReLU, ELU
-from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler
-from keras.regularizers import l1, l2, l1_l2
+from keras.callbacks import LearningRateScheduler
 from keras.initializers import RandomUniform
-from keras.optimizers import RMSprop, Adam, SGD
+from keras.layers import Dense, Input, Embedding, Dropout, Activation, Flatten
+from keras.layers.advanced_activations import LeakyReLU, PReLU, ELU
+from keras.layers.merge import concatenate, dot, add
+from keras.layers.normalization import BatchNormalization
+from keras.models import Model
+from keras.optimizers import RMSprop
+from keras.regularizers import l1, l2
+from sklearn.preprocessing import StandardScaler
 
 from nn_generator import DataGenerator
+
 '''
 import tensorflow as tf
 from keras.backend.tensorflow_backend import set_session
@@ -240,7 +237,7 @@ def FunctionalDense(n, x, batchnorm=False, act='relu', lw1=0.0, dropout=None, na
     elif act == 'elu':
         x = ELU(name=name+'_activation')(x)
     
-    if dropout > 0:
+    if dropout is not None:
         x = Dropout(dropout, name=name+'_dropout')(x)
         
     return x

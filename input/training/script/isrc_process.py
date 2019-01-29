@@ -1,3 +1,4 @@
+########################## parse count of song code (isrc) as feature ########################
 import numpy as np
 import pandas as pd
 
@@ -19,6 +20,8 @@ song['xxx'] = isrc.str.slice(2, 5)
 song['yy'] = isrc.str.slice(5, 7).astype(float)
 song['yy'] = song['yy'].apply(lambda x: 2000+x if x < 18 else 1900+x)
 
+song['cc'].fillna("", inplace=True) ## missing value
+song['xxx'].fillna("", inplace=True)
 song['cc'] = LabelEncoder().fit_transform(song['cc'])
 song['xxx'] = LabelEncoder().fit_transform(song['xxx'])
 song['isrc_missing'] = (song['cc'] == 0) * 1.0

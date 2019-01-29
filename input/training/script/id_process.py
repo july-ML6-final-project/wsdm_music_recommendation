@@ -1,3 +1,5 @@
+############################## convert str features into ids ##########################
+
 import time
 
 import numpy as np
@@ -11,8 +13,10 @@ songs_extra = pd.read_csv('../source_data/song_extra_info.csv')
 train = pd.read_csv('../source_data/train.csv')
 test = pd.read_csv('../source_data/test.csv')
 
+## list all song ids
 song_id_set = set(train['song_id'].append(test['song_id']))
 
+## only consider songs appeared in train/test sets
 songs['appeared'] = songs['song_id'].apply(lambda x: True if x in song_id_set else False)
 songs = songs[songs.appeared]
 songs.drop('appeared', axis=1, inplace=True)
@@ -21,15 +25,17 @@ songs_extra['appeared'] = songs_extra['song_id'].apply(lambda x: True if x in so
 songs_extra = songs_extra[songs_extra.appeared]
 songs_extra.drop('appeared', axis=1, inplace=True)
 
+## list all user ids
 msno_set = set(train['msno'].append(test['msno']))
 
+## only considere users appeared in train/test sets
 members['appeared'] = members['msno'].apply(lambda x: True if x in msno_set else False)
 members = members[members.appeared]
 members.drop('appeared', axis=1, inplace=True)
 
 print('Data loaded.')
 
-## preprocess msno and song_id
+## preprocess msno and song_id: label encoding
 msno_encoder = LabelEncoder()
 msno_encoder.fit(members['msno'].values)
 members['msno'] = msno_encoder.transform(members['msno'])
@@ -51,7 +57,7 @@ print('Song_id done.')
 columns = ['source_system_tab', 'source_screen_name', 'source_type']
 for column in columns:
     column_encoder = LabelEncoder()
-    train[column].fillna("nan", inplace=True)
+    train[column].fillna("nan", inplace=True) ## handle nan
     test[column].fillna("nan", inplace=True)
     column_encoder.fit(train[column].append(test[column]))
     train[column] = column_encoder.transform(train[column])
@@ -63,7 +69,7 @@ print('Source information done.')
 columns = ['city', 'gender', 'registered_via']
 for column in columns:
     column_encoder = LabelEncoder()
-    members[column].fillna("nan", inplace=True)
+    members[column].fillna("nan", inplace=True) ## handle nan
     column_encoder.fit(members[column])
     members[column] = column_encoder.transform(members[column])
 
@@ -75,12 +81,14 @@ members['expiration_date'] = members['expiration_date'].apply(lambda x: \
 print('Members information done.')
 
 ## preprocess the features in songs.csv
+
+## genre
 genre_id = np.zeros((len(songs), 4))
 for i in range(len(songs)):
     if not isinstance(songs['genre_ids'].values[i], str):
         continue
     ids = str(songs['genre_ids'].values[i]).split('|')
-    if len(ids) > 2:
+    if len(ids) > 2: ## pick at most 3 genres
         genre_id[i, 0] = int(ids[0])
         genre_id[i, 1] = int(ids[1])
         genre_id[i, 2] = int(ids[2])
@@ -102,6 +110,8 @@ songs['second_genre_id'] = genre_encoder.transform(songs['second_genre_id'])
 songs['third_genre_id'] = genre_encoder.transform(songs['third_genre_id'])
 songs.drop('genre_ids', axis=1, inplace=True)
 
+
+## artist/lyricist/composer
 def artist_count(x):
     return x.count('and') + x.count(',') + x.count(' feat') + x.count('&') + 1
 
@@ -149,6 +159,7 @@ def get_first_term(x):
 songs['lyricist'] = songs['lyricist'].apply(get_first_term)
 songs['composer'] = songs['composer'].apply(get_first_term)        
 
+## language
 songs['language'] = songs['language'].fillna(-1)
 columns = ['artist_name', 'lyricist', 'composer', 'language']
 for column in columns:

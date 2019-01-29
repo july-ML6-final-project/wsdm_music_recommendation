@@ -1,8 +1,8 @@
 import gc
-import datetime
+
+import lightgbm as lgb
 import numpy as np
 import pandas as pd
-import lightgbm as lgb
 
 #####################################################
 ## Data Loading
@@ -173,8 +173,8 @@ def transfer(x):
         return x
 drop_col = [transfer(i) for i in drop_col]
 
-#train.drop(drop_col, axis=1, inplace=True)
-#test.drop(drop_col, axis=1, inplace=True)
+train.drop(drop_col, axis=1, inplace=True, errors='ignore')
+test.drop(drop_col, axis=1, inplace=True, errors='ignore')
 
 ## print data information
 print('Data preparation done.')

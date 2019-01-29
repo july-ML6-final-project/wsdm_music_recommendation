@@ -1,3 +1,5 @@
+################################ various count features generation ##############################
+
 import numpy as np
 import pandas as pd
 
@@ -7,11 +9,15 @@ member = pd.read_csv('../temporal_data/members_id.csv')
 song_origin = pd.read_csv('../temporal_data/songs_id.csv')
 song_extra = pd.read_csv('../temporal_data/songs_extra_id.csv')
 
+## concatenate all song's info
 song = pd.DataFrame({'song_id': range(max(train.song_id.max(), test.song_id.max())+1)})
 song = song.merge(song_origin, on='song_id', how='left')
 song = song.merge(song_extra, on='song_id', how='left')
 
 data = train[['msno', 'song_id']].append(test[['msno', 'song_id']])
+
+
+## compute the count of song/artist/composer/lyricist/genre/... and use the count as feature
 
 ## member_cnt
 mem_rec_cnt = data.groupby(by='msno').count()['song_id'].to_dict()
@@ -70,16 +76,22 @@ for feat in dummy_feat:
 train_temp = train.merge(member, on='msno', how='left')
 test_temp = test.merge(member, on='msno', how='left')
 
+
+## compute different conditional probability features
+
+## P(sourcesystemtab|msno)
 train['msno_source_system_tab_prob'] = train_temp[[col for col in train_temp.columns if 'source_system_tab' in col]].apply(lambda x: \
         x['msno_source_system_tab_%d'%x['source_system_tab']], axis=1)
 test['msno_source_system_tab_prob'] = test_temp[[col for col in test_temp.columns if 'source_system_tab' in col]].apply(lambda x: \
         x['msno_source_system_tab_%d'%x['source_system_tab']], axis=1)
 
+## P(sourcescreenname|msno)
 train['msno_source_screen_name_prob'] = train_temp[[col for col in train_temp.columns if 'source_screen_name' in col]].apply(lambda x: \
         x['msno_source_screen_name_%d'%x['source_screen_name']], axis=1)
 test['msno_source_screen_name_prob'] = test_temp[[col for col in test_temp.columns if 'source_screen_name' in col]].apply(lambda x: \
         x['msno_source_screen_name_%d'%x['source_screen_name']], axis=1)
 
+## P(sourcetype|msno)
 train['msno_source_type_prob'] = train_temp[[col for col in train_temp.columns if 'source_type' in col]].apply(lambda x: \
         x['msno_source_type_%d'%x['source_type']], axis=1)
 test['msno_source_type_prob'] = test_temp[[col for col in test_temp.columns if 'source_type' in col]].apply(lambda x: \

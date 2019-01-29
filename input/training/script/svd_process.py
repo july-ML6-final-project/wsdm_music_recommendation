@@ -26,6 +26,7 @@ song_id = concat['song_id'].values
 rating = sparse.coo_matrix((data, (msno, song_id)))
 rating = (rating > 0) * 1.0
 
+## svd for user-song co-occurrence matrix
 [u, s, vt] = svds(rating, k=n_component)
 print(s[::-1])
 s_song = np.diag(s[::-1])
@@ -54,6 +55,7 @@ rating_tmp = sparse.coo_matrix((data, (msno, artist)))
 
 rating = np.log1p(rating_tmp) * 0.3 + (rating_tmp > 0) * 1.0
 
+## svd for user-artist co-occurrence matrix
 [u, s, vt] = svds(rating, k=n_component)
 print(s[::-1])
 s_artist = np.diag(s[::-1])
@@ -102,6 +104,7 @@ for i in range(len(te)):
     test_dot[i, 0] = np.dot(member_embeddings[msno_idx], np.dot(s_song, song_embeddings[song_idx]))
     test_dot[i, 1] = np.dot(member_artist_embeddings[msno_idx], np.dot(s_artist, song_artist_embeddings[song_idx]))
 
+## apply the dot product of two embeddings as feature for each training/testing user-song pair
 tr['song_embeddings_dot'] = train_dot[:, 0]
 tr['artist_embeddings_dot'] = train_dot[:, 1]
 
