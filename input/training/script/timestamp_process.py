@@ -1,3 +1,5 @@
+###################### statistical count of different entities across timeline ####################
+
 from collections import defaultdict
 
 import numpy as np
@@ -19,6 +21,7 @@ window_sizes = [10, 25, 500, 5000, 10000, 50000]
 msno_list = concat['msno'].values
 song_list = concat['song_id'].values
 
+## count the # of songs/users before & after time span of window_size at each timestamp of data point (i.e. user-song pair)
 def get_window_cnt(values, idx, window_size):
     lower = max(0, idx-window_size)
     upper = min(len(values), idx+window_size)
@@ -57,17 +60,18 @@ concat['song_till_now_cnt'] = song_till_now_cnt
 
 print('Till-now count done.')
 
-## varience
+## scaling for timestamp
 def timestamp_map(x):
-    if x < 7377418:
+    if x < 7377418: ## train dataset
         x = (x - 0.0) / (7377417.0 - 0.0) * (1484236800.0 - 1471190400.0) + 1471190400.0
-    else:
+    else: ## test dataset
         x = (x - 7377417.0) / (9934207.0 - 7377417.0) * (1488211200.0 - 1484236800.0) + 1484236800.0
 
     return x
     
 concat['timestamp'] = concat['timestamp'].apply(timestamp_map)
 
+### the mean/std of the appearing timestamp for each user/song
 msno_mean = concat.groupby(by='msno').mean()['timestamp'].to_dict()
 mem['msno_timestamp_mean'] = mem['msno'].apply(lambda x: msno_mean[x])
 
@@ -80,7 +84,7 @@ song['song_timestamp_mean'] = song['song_id'].apply(lambda x: song_mean[x])
 song_std = concat.groupby(by='song_id').std()['timestamp'].to_dict()
 song['song_timestamp_std'] = song['song_id'].apply(lambda x: song_std[x])
 
-print('Varience done.')
+print('Variance done.')
 
 ## save to files
 features = ['msno_till_now_cnt', 'song_till_now_cnt']

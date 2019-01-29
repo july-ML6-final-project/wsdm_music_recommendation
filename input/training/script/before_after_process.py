@@ -1,3 +1,5 @@
+###################### find the previous and next song/source type/name of each user ##############
+
 from collections import defaultdict
 
 import numpy as np
@@ -15,7 +17,7 @@ print(len(te))
 concat = tr[['msno', 'song_id', 'source_type', 'source_screen_name', 'timestamp']].append(te[['msno', \
         'song_id', 'source_type', 'source_screen_name', 'timestamp']])
 
-## before data
+## before data: for each user, record its song/source_type/source_screen_name of last time stamp
 song_dict = defaultdict(lambda: None)
 type_dict = defaultdict(lambda: None)
 name_dict = defaultdict(lambda: None)
@@ -41,7 +43,7 @@ for i in range(len(concat)):
 
 print('data before done.')
 
-## after data
+## after data: for each user, record its song/source_type/source_screen_name of next time stamp
 song_dict = defaultdict(lambda: None)
 type_dict = defaultdict(lambda: None)
 name_dict = defaultdict(lambda: None)

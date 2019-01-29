@@ -1,3 +1,5 @@
+############################## generate data for lightGBM/NN training ############################
+
 import numpy as np
 import pandas as pd
 
@@ -14,6 +16,7 @@ test.to_csv('../test.csv', index=False, float_format='%.6f')
 train['iid'] = train['song_id'] * 100000 + train['msno']
 test['iid'] = test['song_id'] * 100000 + test['msno']
 
+## find out user-song pairs that appeared in test set but not in train set
 iid_set = set(test['iid'].values)
 train['appeared'] = train['iid'].apply(lambda x: x in iid_set)
 train = train[train['appeared'] == False]
@@ -33,7 +36,7 @@ song['artist_name'] = song['artist_name'].astype(int)
 song['isrc_missing'] = song['isrc_missing'].astype(int)
 song.to_csv('../songs_gbdt.csv', index=False)
 
-## prepare data for member / song for NN
+## prepare data for member / song for NN: fill the missing value
 member['bd_missing'] = np.isnan(member['bd'].values) * 1
 
 columns = ['bd']

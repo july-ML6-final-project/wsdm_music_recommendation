@@ -1,3 +1,4 @@
+################################# Add probability features ############################
 import numpy as np
 import pandas as pd
 
@@ -12,13 +13,16 @@ concat = concat.merge(song[['song_id', 'song_length', 'artist_name', 'first_genr
         'artist_rec_cnt', 'song_rec_cnt', 'artist_song_cnt', 'xxx', 'yy', \
         'language']], on='song_id', how='left')
 
+## combine all source related features into one
 concat['source'] = concat['source_system_tab'] * 10000 + concat['source_screen_name'] * 100 + \
         concat['source_type']
+
 from sklearn.preprocessing import LabelEncoder
 concat['source'] = LabelEncoder().fit_transform(concat['source'].values)
 
-## member features
+## add member features
 
+## for each user/member, compute the mean/std of metadata of its listened song
 mem_add = pd.DataFrame({'msno': range(concat['msno'].max()+1)})
 data_avg = concat[['msno', 'song_length', 'artist_song_cnt', \
         'artist_rec_cnt', 'song_rec_cnt', 'yy']].groupby('msno').mean()
@@ -32,10 +36,12 @@ data_std.columns = ['msno_'+i+'_std' for i in data_std.columns]
 data_std['msno'] = data_std.index.values
 mem_add = mem_add.merge(data_std, on='msno', how='left')
 
+## for each member, count the # of its listened artists
 artist_msno = concat[['msno', 'artist_name']].groupby('msno').apply(lambda x: len(set(x['artist_name'].values)))
 mem_add['artist_msno_cnt'] = artist_msno
 mem_add['artist_msno_cnt'] = np.log1p(mem_add['artist_msno_cnt'])
 
+## for each member, compute its favored language probability
 language_dummy = pd.get_dummies(concat['language'])
 language_dummy['msno'] = concat['msno'].values
 language_prob = language_dummy.groupby('msno').mean()
@@ -45,8 +51,9 @@ mem_add = mem_add.merge(language_prob, on='msno', how='left')
 
 mem_add.to_csv('../members_add.csv', index=False)
 
-## train/test features
+## add train/test features
 
+## members probability features
 col = ['artist_name', 'first_genre_id', 'xxx', 'language', 'yy', 'source']
 for feat in col:
     concat['id'] = concat['msno'] * 100000 + concat[feat]
@@ -58,6 +65,7 @@ concat['msno_cnt'] = concat['msno'].apply(lambda x: msno_cnt[x])
 for feat in col:
     concat['msno_'+feat+'_prob'] = concat['msno_'+feat+'_cnt'] / concat['msno_cnt']
 
+## songs probability features
 cols = ['source_system_tab', 'source_screen_name', 'source_type']
 for col in cols:
     concat['id'] = concat['song_id'] * 10000 + concat[col]
