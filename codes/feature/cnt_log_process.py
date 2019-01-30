@@ -5,11 +5,11 @@
 import numpy as np
 import pandas as pd
 
-train = pd.read_csv('../temporal_data/train_id.csv')
-test = pd.read_csv('../temporal_data/test_id.csv')
-member = pd.read_csv('../temporal_data/members_id.csv')
-song_origin = pd.read_csv('../temporal_data/songs_id.csv')
-song_extra = pd.read_csv('../temporal_data/songs_extra_id.csv')
+train = pd.read_csv('../../data/tmp/train_id.csv')
+test = pd.read_csv('../../data/tmp/test_id.csv')
+member = pd.read_csv('../../data/tmp/members_id.csv')
+song_origin = pd.read_csv('../../data/tmp/songs_id.csv')
+song_extra = pd.read_csv('../../data/tmp/songs_extra_id.csv')
 
 ## concatenate all song's info
 song = pd.DataFrame({'song_id': range(max(train.song_id.max(), test.song_id.max())+1)})
@@ -112,7 +112,7 @@ features = ['song_length', 'song_rec_cnt', 'artist_song_cnt', 'composer_song_cnt
 for feat in features:
     song[feat] = np.log1p(song[feat])
 #song['song_length'] = np.log1p(song['song_length'])
-song.to_csv('../temporal_data/songs_id_cnt.csv', index=False)
+song.to_csv('../../data/tmp/songs_id_cnt.csv', index=False)
 
-train.to_csv('../temporal_data/train_id_cnt.csv', index=False)
-test.to_csv('../temporal_data/test_id_cnt.csv', index=False)
+train.to_csv('../../data/tmp/train_id_cnt.csv', index=False)
+test.to_csv('../../data/tmp/test_id_cnt.csv', index=False)

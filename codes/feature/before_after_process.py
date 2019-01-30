@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 
 ## load data
-tr = pd.read_csv('../temporal_data/train_id_cnt_svd_stamp.csv')
-te = pd.read_csv('../temporal_data/test_id_cnt_svd_stamp.csv')
+tr = pd.read_csv('../../data/tmp/train_id_cnt_svd_stamp.csv')
+te = pd.read_csv('../../data/tmp/test_id_cnt_svd_stamp.csv')
 
 print('data loaded.')
 print(len(tr))
@@ -99,5 +99,5 @@ te['before_timestamp'].fillna(np.nanmean(te['before_timestamp']), inplace=True)
 tr['after_timestamp'].fillna(np.nanmean(tr['after_timestamp']), inplace=True)
 te['after_timestamp'].fillna(np.nanmean(te['after_timestamp']), inplace=True)
 
-tr.to_csv('../temporal_data/train_id_cnt_svd_stamp_before_after.csv', index=False)
-te.to_csv('../temporal_data/test_id_cnt_svd_stamp_before_after.csv', index=False)
+tr.to_csv('../../data/tmp/train_id_cnt_svd_stamp_before_after.csv', index=False)
+te.to_csv('../../data/tmp/test_id_cnt_svd_stamp_before_after.csv', index=False)

@@ -16,16 +16,16 @@ folder = 'training'
 
 ## load data
 if folder == 'training':
-    train = pd.read_csv('./input/%s/train_part.csv'%folder)
-    train_add = pd.read_csv('./input/%s/train_part_add.csv'%folder)
+    train = pd.read_csv('../../data/%s/train_part.csv'%folder)
+    train_add = pd.read_csv('../../data/%s/train_part_add.csv'%folder)
 elif folder == 'validation':
-    train = pd.read_csv('./input/%s/train.csv'%folder)
-    train_add = pd.read_csv('./input/%s/train_add.csv'%folder)
+    train = pd.read_csv('../../data/%s/train.csv'%folder)
+    train_add = pd.read_csv('../../data/%s/train_add.csv'%folder)
 train_y = train['target']
 train.drop(['target'], inplace=True, axis=1)
 
-test = pd.read_csv('./input/%s/test.csv'%folder)
-test_add = pd.read_csv('./input/%s/test_add.csv'%folder)
+test = pd.read_csv('../../data/%s/test.csv'%folder)
+test_add = pd.read_csv('../../data/%s/test_add.csv'%folder)
 test_id = test['id']
 test.drop(['id'], inplace=True, axis=1)
 
@@ -44,7 +44,7 @@ for col in cols:
 ## merge data
 
 ## member features
-member = pd.read_csv('./input/%s/members_gbdt.csv'%folder)
+member = pd.read_csv('../../data/%s/members_gbdt.csv'%folder)
 
 train = train.merge(member, on='msno', how='left')
 test = test.merge(member, on='msno', how='left')
@@ -52,7 +52,7 @@ test = test.merge(member, on='msno', how='left')
 del member
 gc.collect()
 
-member_add = pd.read_csv('./input/%s/members_add.csv'%folder)
+member_add = pd.read_csv('../../data/%s/members_add.csv'%folder)
 
 cols = ['msno', 'msno_song_length_mean', 'artist_msno_cnt']
 train = train.merge(member_add[cols], on='msno', how='left')
@@ -62,7 +62,7 @@ del member_add
 gc.collect()
 
 ## song features
-song = pd.read_csv('./input/%s/songs_gbdt.csv'%folder)
+song = pd.read_csv('../../data/%s/songs_gbdt.csv'%folder)
 
 train = train.merge(song, on='song_id', how='left')
 test = test.merge(song, on='song_id', how='left')
@@ -204,7 +204,7 @@ train_data = lgb.Dataset(train, label=train_y, \
 del train
 gc.collect()
 
-para = pd.read_csv('./lgb_record.csv').sort_values(by='val_auc', ascending=False)
+para = pd.read_csv('../../data/log/lgb_record.csv').sort_values(by='val_auc', ascending=False)
 for i in range(1):
     params = {
         'boosting_type': para['type'].values[i],
@@ -244,12 +244,12 @@ for i in range(1):
     print('Model training done. Validation AUC: %.5f'%val_auc)
 
     feature_importance = pd.DataFrame({'name':gbm.feature_name(), 'importance':gbm.feature_importance()}).sort_values(by='importance', ascending=False)
-    feature_importance.to_csv('./feat_importance_for_test.csv', index=False)
+    feature_importance.to_csv('../../data/log/feat_importance_for_test.csv', index=False)
     
     flag = np.random.randint(0, 65536)    
        
     test_pred = gbm.predict(test)
     test_sub = pd.DataFrame({'id': test_id, 'target': test_pred})
-    test_sub.to_csv('./submission/lgb_%.5f_%d.csv.gz'%(val_auc, flag), index=False, \
+    test_sub.to_csv('../../data/submissions/lgb_%.5f_%d.csv.gz'%(val_auc, flag), index=False, \
             compression='gzip')
     

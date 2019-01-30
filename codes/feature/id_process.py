@@ -9,11 +9,11 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 ## load the data
-members = pd.read_csv('../source_data/members.csv')
-songs = pd.read_csv('../source_data/songs.csv')
-songs_extra = pd.read_csv('../source_data/song_extra_info.csv')
-train = pd.read_csv('../source_data/train.csv')
-test = pd.read_csv('../source_data/test.csv')
+members = pd.read_csv('../../data/input/members.csv')
+songs = pd.read_csv('../../data/input/songs.csv')
+songs_extra = pd.read_csv('../../data/input/song_extra_info.csv')
+train = pd.read_csv('../../data/input/train.csv')
+test = pd.read_csv('../../data/input/test.csv')
 
 
 ############################################################
@@ -181,9 +181,9 @@ for column in columns:
     songs[column] = column_encoder.transform(songs[column])
 
 ## save files
-members.to_csv('../temporal_data/members_id.csv', index=False)
-songs.to_csv('../temporal_data/songs_id.csv', index=False)
-songs_extra.to_csv('../temporal_data/songs_extra_id.csv', index=False)
-train.to_csv('../temporal_data/train_id.csv', index=False)
-test.to_csv('../temporal_data/test_id.csv', index=False)
+members.to_csv('../../data/tmp/members_id.csv', index=False)
+songs.to_csv('../../data/tmp/songs_id.csv', index=False)
+songs_extra.to_csv('../../data/tmp/songs_extra_id.csv', index=False)
+train.to_csv('../../data/tmp/train_id.csv', index=False)
+test.to_csv('../../data/tmp/test_id.csv', index=False)
 

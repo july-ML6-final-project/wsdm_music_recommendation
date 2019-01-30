@@ -8,10 +8,10 @@ import numpy as np
 import pandas as pd
 
 ## load the data
-tr = pd.read_csv('../temporal_data/train_id_cnt_svd.csv')
-te = pd.read_csv('../temporal_data/test_id_cnt_svd.csv')
-mem = pd.read_csv('../temporal_data/members_id_cnt_svd.csv')
-song = pd.read_csv('../temporal_data/songs_id_cnt_isrc_svd.csv')
+tr = pd.read_csv('../../data/tmp/train_id_cnt_svd.csv')
+te = pd.read_csv('../../data/tmp/test_id_cnt_svd.csv')
+mem = pd.read_csv('../../data/tmp/members_id_cnt_svd.csv')
+song = pd.read_csv('../../data/tmp/songs_id_cnt_isrc_svd.csv')
 
 ## continous index
 concat = tr[['msno', 'song_id']].append(te[['msno', 'song_id']])
@@ -103,7 +103,7 @@ for i in range(len(features)):
     tr[features[i]] = data[:len(tr), i]
     te[features[i]] = data[len(tr):, i]
 
-tr.to_csv('../temporal_data/train_id_cnt_svd_stamp.csv', index=False)
-te.to_csv('../temporal_data/test_id_cnt_svd_stamp.csv', index=False)
-mem.to_csv('../temporal_data/members_id_cnt_svd_stamp.csv', index=False)
-song.to_csv('../temporal_data/songs_id_cnt_isrc_svd_stamp.csv', index=False)
+tr.to_csv('../../data/tmp/train_id_cnt_svd_stamp.csv', index=False)
+te.to_csv('../../data/tmp/test_id_cnt_svd_stamp.csv', index=False)
+mem.to_csv('../../data/tmp/members_id_cnt_svd_stamp.csv', index=False)
+song.to_csv('../../data/tmp/songs_id_cnt_isrc_svd_stamp.csv', index=False)

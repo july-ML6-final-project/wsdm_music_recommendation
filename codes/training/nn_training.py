@@ -33,16 +33,16 @@ folder = 'training'
 
 ## load train data
 if folder == 'training':
-    train = pd.read_csv('./input/%s/train_part.csv'%folder)
-    train_add = pd.read_csv('./input/%s/train_part_add.csv'%folder)
+    train = pd.read_csv('../../data/%s/train_part.csv'%folder)
+    train_add = pd.read_csv('../../data/%s/train_part_add.csv'%folder)
 elif folder == 'validation':
-    train = pd.read_csv('./input/%s/train.csv'%folder)
-    train_add = pd.read_csv('./input/%s/train_add.csv'%folder)
+    train = pd.read_csv('../../data/%s/train.csv'%folder)
+    train_add = pd.read_csv('../../data/%s/train_add.csv'%folder)
 train_y = train['target']
 train.drop(['target'], inplace=True, axis=1)
 
-test = pd.read_csv('./input/%s/test.csv'%folder)
-test_add = pd.read_csv('./input/%s/test_add.csv'%folder)
+test = pd.read_csv('../../data/%s/test.csv'%folder)
+test_add = pd.read_csv('../../data/%s/test_add.csv'%folder)
 test_id = test['id']
 test.drop(['id'], inplace=True, axis=1)
 
@@ -53,10 +53,10 @@ for col in train_add.columns:
 print('Train data loaded.')
 
 ## load other data
-member = pd.read_csv('./input/%s/members_nn.csv'%folder).sort_values('msno')
-song = pd.read_csv('./input/%s/songs_nn.csv'%folder).sort_values('song_id')
+member = pd.read_csv('../../data/%s/members_nn.csv'%folder).sort_values('msno')
+song = pd.read_csv('../../data/%s/songs_nn.csv'%folder).sort_values('song_id')
 
-member_add = pd.read_csv('./input/%s/members_add.csv'%folder).sort_values('msno')
+member_add = pd.read_csv('../../data/%s/members_add.csv'%folder).sort_values('msno')
 member_add.fillna(0, inplace=True)
 member = member.merge(member_add, on='msno', how='left')
 
@@ -409,8 +409,8 @@ def get_model(K, K0, lw=1e-4, lw1=1e-4, lr=1e-3, act='relu', batchnorm=False):
 ######################################################
 
 ## train the model
-para = pd.read_csv('./nn_record.csv').sort_values(by='val_auc', ascending=False)
-for i in range(5):
+para = pd.read_csv('../../data/log/new_nn_record.csv').sort_values(by='val_auc', ascending=False)
+for i in range(50):
 
     ## extract stored model parameters from validation process
     K = para['K'].values[i]
@@ -444,6 +444,12 @@ for i in range(5):
         
         if(train_loss < train_loss0 * 1.1):
             break
+
+        if train_loss > 1:
+            break
+
+    if train_loss > 1:  # invalid model, skip
+        continue
         
     val_auc = para['val_auc'].values[i]
     print('Model training done. Validation AUC: %.5f'%val_auc)
@@ -455,5 +461,5 @@ for i in range(5):
     test_pred = model.predict_generator(test_flow, test_flow.__len__(), workers=1)
     
     test_sub = pd.DataFrame({'id': test_id, 'target': test_pred.ravel()})
-    test_sub.to_csv('./temp_nn/nn_%.5f_%.5f_%d.csv'%(val_auc, train_loss, flag), index=False)
+    test_sub.to_csv('../../data/submissions/temp_nn/nn_%.5f_%.5f_%d.csv'%(val_auc, train_loss, flag), index=False)
     

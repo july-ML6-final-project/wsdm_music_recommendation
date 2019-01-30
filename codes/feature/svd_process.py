@@ -9,10 +9,10 @@ from scipy import sparse
 from scipy.sparse.linalg import svds
 
 ## load the data
-tr = pd.read_csv('../temporal_data/train_id_cnt.csv')
-te = pd.read_csv('../temporal_data/test_id_cnt.csv')
-member = pd.read_csv('../temporal_data/members_id_cnt.csv')
-song = pd.read_csv('../temporal_data/songs_id_cnt_isrc.csv')
+tr = pd.read_csv('../../data/tmp/train_id_cnt.csv')
+te = pd.read_csv('../../data/tmp/test_id_cnt.csv')
+member = pd.read_csv('../../data/tmp/members_id_cnt.csv')
+song = pd.read_csv('../../data/tmp/songs_id_cnt_isrc.csv')
 
 concat = tr[['msno', 'song_id']].append(te[['msno', 'song_id']])
 member_cnt = concat['msno'].max() + 1
@@ -117,7 +117,7 @@ te['song_embeddings_dot'] = test_dot[:, 0]
 te['artist_embeddings_dot'] = test_dot[:, 1]
 
 ## write to files
-tr.to_csv('../temporal_data/train_id_cnt_svd.csv', index=False)
-te.to_csv('../temporal_data/test_id_cnt_svd.csv', index=False)
-member.to_csv('../temporal_data/members_id_cnt_svd.csv', index=False)
-song.to_csv('../temporal_data/songs_id_cnt_isrc_svd.csv', index=False)
+tr.to_csv('../../data/tmp/train_id_cnt_svd.csv', index=False)
+te.to_csv('../../data/tmp/test_id_cnt_svd.csv', index=False)
+member.to_csv('../../data/tmp/members_id_cnt_svd.csv', index=False)
+song.to_csv('../../data/tmp/songs_id_cnt_isrc_svd.csv', index=False)

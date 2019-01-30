@@ -8,9 +8,9 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 ## load the data
-train = pd.read_csv('../temporal_data/train_id.csv')
-test = pd.read_csv('../temporal_data/test_id.csv')
-song = pd.read_csv('../temporal_data/songs_id_cnt.csv')
+train = pd.read_csv('../../data/tmp/train_id.csv')
+test = pd.read_csv('../../data/tmp/test_id.csv')
+song = pd.read_csv('../../data/tmp/songs_id_cnt.csv')
 
 data = train[['msno', 'song_id']].append(test[['msno', 'song_id']])
 
@@ -63,4 +63,4 @@ for feat in features:
     song[feat] = np.log1p(song[feat])
 
 song.drop(['name', 'isrc'], axis=1, inplace=True)
-song.to_csv('../temporal_data/songs_id_cnt_isrc.csv', index=False)
+song.to_csv('../../data/tmp/songs_id_cnt_isrc.csv', index=False)

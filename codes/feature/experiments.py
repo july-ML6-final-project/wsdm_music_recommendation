@@ -5,9 +5,9 @@
 import numpy as np
 import pandas as pd
 
-tr = pd.read_csv('../train_part.csv')
-te = pd.read_csv('../test.csv')
-song = pd.read_csv('../songs_nn.csv')
+tr = pd.read_csv('../../data/training/train_part.csv')
+te = pd.read_csv('../../data/training/test.csv')
+song = pd.read_csv('../../data/training/songs_nn.csv')
 
 concat = tr[['msno', 'song_id', 'source_system_tab', 'source_screen_name', \
         'source_type']].append(te[['msno', 'song_id', 'source_system_tab', \
@@ -52,7 +52,7 @@ language_prob.columns = ['msno_language_%d'%i for i in language_prob.columns]
 language_prob['msno'] = language_prob.index
 mem_add = mem_add.merge(language_prob, on='msno', how='left')
 
-mem_add.to_csv('../members_add.csv', index=False)
+mem_add.to_csv('../../data/training/members_add.csv', index=False)
 
 ## add train/test features
 
@@ -85,6 +85,6 @@ result = concat[['msno_artist_name_prob', 'msno_first_genre_id_prob', 'msno_xxx_
         'msno_language_prob', 'msno_yy_prob', 'song_source_system_tab_prob', \
         'song_source_screen_name_prob', 'song_source_type_prob', 'source', 'msno_source_prob']]
 
-result[:len(tr)].to_csv('../train_part_add.csv', index=False)
-result[len(tr):].to_csv('../test_add.csv', index=False)
+result[:len(tr)].to_csv('../../data/training/train_part_add.csv', index=False)
+result[len(tr):].to_csv('../../data/training/test_add.csv', index=False)
 
