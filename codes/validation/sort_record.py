@@ -1,6 +1,6 @@
 import pandas as pd
 
-file_name = 'nn_record.csv'
+file_name = '../../data/log/nn_record.csv'
 
 record = pd.read_csv(file_name)
 

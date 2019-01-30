@@ -10,16 +10,16 @@ import pandas as pd
 #####################################################
 
 ## load data
-train = pd.read_csv('./input/validation/train.csv')
+train = pd.read_csv('../../data/validation/train.csv')
 train_y = train['target']
 train.drop(['target'], inplace=True, axis=1)
 
-test = pd.read_csv('./input/validation/test.csv')
-test_y = pd.read_csv('./input/validation/test_label.csv')['target']
+test = pd.read_csv('../../data/validation/test.csv')
+test_y = pd.read_csv('../../data/validation/test_label.csv')['target']
 test.drop(['id'], inplace=True, axis=1)
 
-train_add = pd.read_csv('./input/validation/train_add.csv')
-test_add = pd.read_csv('./input/validation/test_add.csv')
+train_add = pd.read_csv('../../data/validation/train_add.csv')
+test_add = pd.read_csv('../../data/validation/test_add.csv')
 
 train_add['source'] = train_add['source'].astype('category')
 test_add['source'] = test_add['source'].astype('category')
@@ -33,7 +33,7 @@ for col in cols:
     test[col] = test_add[col].values
 
 ## merge data
-member = pd.read_csv('./input/validation/members_gbdt.csv')
+member = pd.read_csv('../../data/validation/members_gbdt.csv')
 
 train = train.merge(member, on='msno', how='left')
 test = test.merge(member, on='msno', how='left')
@@ -41,7 +41,7 @@ test = test.merge(member, on='msno', how='left')
 del member
 gc.collect()
 
-member_add = pd.read_csv('./input/validation/members_add.csv')
+member_add = pd.read_csv('../../data/validation/members_add.csv')
 
 cols = ['msno', 'msno_song_length_mean', 'artist_msno_cnt']
 train = train.merge(member_add[cols], on='msno', how='left')
@@ -50,7 +50,7 @@ test = test.merge(member_add[cols], on='msno', how='left')
 del member_add
 gc.collect()
 
-song = pd.read_csv('./input/validation/songs_gbdt.csv')
+song = pd.read_csv('../../data/validation/songs_gbdt.csv')
 
 train = train.merge(song, on='song_id', how='left')
 test = test.merge(song, on='song_id', how='left')
@@ -220,7 +220,7 @@ del train
 del test
 gc.collect()
 
-para = pd.read_csv('./lgb_record.csv').sort_values(by='val_auc', ascending=False)
+para = pd.read_csv('../../log/lgb_record.csv').sort_values(by='val_auc', ascending=False)
 for i in range(1):
     
     params = {
@@ -300,7 +300,7 @@ for i in range(1):
             params['min_data_in_leaf'], params['feature_fraction'], params['bagging_fraction'], \
             params['bagging_freq'], params['lambda_l1'], params['lambda_l2'], params['min_gain_to_split'], \
             params['min_sum_hessian_in_leaf'], 0.0, bst_round+1, trn_loss, trn_auc, val_loss, val_auc)
-    f = open('./lgb_record.csv', 'a')
+    f = open('../../data/log/lgb_record.csv', 'a')
     f.write(res)
     f.close()
 

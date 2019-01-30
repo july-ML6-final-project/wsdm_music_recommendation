@@ -5,7 +5,7 @@
 import numpy as np
 import pandas as pd
 
-nn_record = pd.read_csv("nn_record.csv")
+nn_record = pd.read_csv("../../data/nn_record.csv")
 N = 50 - len(nn_record)
 
 np.random.seed(2019)
@@ -30,7 +30,7 @@ for n in range(N):
 new_record = pd.DataFrame(new_record)
 new_nn_record = pd.concat([nn_record, new_record])
 new_nn_record.fillna(method='ffill', inplace=True)
-new_nn_record.to_csv("new_nn_record.csv", index=False)
+new_nn_record.to_csv("../../data/new_nn_record.csv", index=False)
     
     
 
