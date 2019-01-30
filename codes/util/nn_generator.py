@@ -1,9 +1,8 @@
-import numpy as np
 import threading
-import warnings
+from abc import abstractmethod
 
-from abc import ABCMeta, abstractmethod
-from keras import backend as K
+import numpy as np
+
 
 class DataGenerator(object):
     def __init__(self, class_size=None):

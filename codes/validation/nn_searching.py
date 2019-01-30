@@ -1,23 +1,22 @@
-import os
-import gc
 import datetime
+import gc
+import os
+
 import numpy as np
 import pandas as pd
-
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import roc_auc_score
-
-from keras.models import Model
-from keras.layers import Dense, Input, Embedding, Dropout, Activation, Reshape, Flatten
-from keras.layers.merge import concatenate, dot, add, multiply
-from keras.layers.normalization import BatchNormalization
-from keras.layers.advanced_activations import LeakyReLU, PReLU, ELU
-from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler
-from keras.regularizers import l1, l2, l1_l2
+from keras.callbacks import EarlyStopping, ModelCheckpoint, LearningRateScheduler
 from keras.initializers import RandomUniform
-from keras.optimizers import RMSprop, Adam, SGD
-
+from keras.layers import Dense, Input, Embedding, Dropout, Activation, Flatten
+from keras.layers.advanced_activations import LeakyReLU, PReLU, ELU
+from keras.layers.merge import concatenate, dot, add
+from keras.layers.normalization import BatchNormalization
+from keras.models import Model
+from keras.optimizers import RMSprop
+from keras.regularizers import l1, l2
 from nn_generator import DataGenerator
+from sklearn.metrics import roc_auc_score
+from sklearn.preprocessing import StandardScaler
+
 '''
 import tensorflow as tf
 from keras.backend.tensorflow_backend import set_session

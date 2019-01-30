@@ -15,9 +15,8 @@ from keras.layers.normalization import BatchNormalization
 from keras.models import Model
 from keras.optimizers import RMSprop
 from keras.regularizers import l1, l2
-from sklearn.preprocessing import StandardScaler
-
 from nn_generator import DataGenerator
+from sklearn.preprocessing import StandardScaler
 
 '''
 import tensorflow as tf
