@@ -1,3 +1,7 @@
+############################################################################################
+#################Train FF Neural Network model and generate submission #####################
+############################################################################################
+
 import gc
 
 import numpy as np
@@ -76,6 +80,8 @@ test = test.merge(song[['song_id', 'artist_name', 'composer', 'lyricist', \
         'language', 'first_genre_id', 'second_genre_id', 'third_genre_id', \
         'cc', 'xxx']], on='song_id', how='left')
 
+
+## add boolean features of whether current xxx is the same as before/after as contextual feature
 cols = ['song_id', 'artist_name', 'language', 'first_genre_id', 'song_rec_cnt']
 tmp = song[cols]
 
@@ -407,6 +413,7 @@ def get_model(K, K0, lw=1e-4, lw1=1e-4, lr=1e-3, act='relu', batchnorm=False):
 para = pd.read_csv('./nn_record.csv').sort_values(by='val_auc', ascending=False)
 for i in range(5):
 
+    ## extract stored model parameters from validation process
     K = para['K'].values[i]
     K0 = para['K0'].values[i]
     lw = para['lw'].values[i]

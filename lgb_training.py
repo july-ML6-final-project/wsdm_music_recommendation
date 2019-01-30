@@ -1,3 +1,7 @@
+############################################################################################
+######################### Train lightGBM model and generate submission #####################
+############################################################################################
+
 import gc
 
 import lightgbm as lgb
@@ -28,6 +32,7 @@ test.drop(['id'], inplace=True, axis=1)
 train_add['source'] = train_add['source'].astype('category')
 test_add['source'] = test_add['source'].astype('category')
 
+## append added probability features to train/test features
 cols = ['msno_artist_name_prob', 'msno_first_genre_id_prob', 'msno_xxx_prob', \
         'msno_language_prob', 'msno_yy_prob', 'source', 'msno_source_prob', \
         'song_source_system_tab_prob', 'song_source_screen_name_prob', \
@@ -37,6 +42,8 @@ for col in cols:
     test[col] = test_add[col].values
 
 ## merge data
+
+## member features
 member = pd.read_csv('./input/%s/members_gbdt.csv'%folder)
 
 train = train.merge(member, on='msno', how='left')
@@ -54,6 +61,7 @@ test = test.merge(member_add[cols], on='msno', how='left')
 del member_add
 gc.collect()
 
+## song features
 song = pd.read_csv('./input/%s/songs_gbdt.csv'%folder)
 
 train = train.merge(song, on='song_id', how='left')

@@ -1,4 +1,6 @@
-############################## convert str features into ids ##########################
+##########################################################################################
+############################## convert categorical features into ids #####################
+##########################################################################################
 
 import time
 
@@ -12,6 +14,11 @@ songs = pd.read_csv('../source_data/songs.csv')
 songs_extra = pd.read_csv('../source_data/song_extra_info.csv')
 train = pd.read_csv('../source_data/train.csv')
 test = pd.read_csv('../source_data/test.csv')
+
+
+############################################################
+## remove song/user not appearing the train/test set
+############################################################
 
 ## list all song ids
 song_id_set = set(train['song_id'].append(test['song_id']))
@@ -35,7 +42,11 @@ members.drop('appeared', axis=1, inplace=True)
 
 print('Data loaded.')
 
-## preprocess msno and song_id: label encoding
+####################################################################
+## label encode msno/song_id/other categorical features
+####################################################################
+
+## preprocess msno
 msno_encoder = LabelEncoder()
 msno_encoder.fit(members['msno'].values)
 members['msno'] = msno_encoder.transform(members['msno'])
@@ -44,6 +55,7 @@ test['msno'] = msno_encoder.transform(test['msno'])
 
 print('MSNO done.')
 
+## preprocess song_id
 song_id_encoder = LabelEncoder()
 song_id_encoder.fit(train['song_id'].append(test['song_id']))
 songs['song_id'] = song_id_encoder.transform(songs['song_id'])
@@ -53,7 +65,7 @@ test['song_id'] = song_id_encoder.transform(test['song_id'])
 
 print('Song_id done.')
 
-## preprocess the features in train.csv & test.csv
+## preprocess the contextual features in train.csv & test.csv
 columns = ['source_system_tab', 'source_screen_name', 'source_type']
 for column in columns:
     column_encoder = LabelEncoder()
@@ -82,7 +94,7 @@ print('Members information done.')
 
 ## preprocess the features in songs.csv
 
-## genre
+## genres: split genre ids and pick the first three
 genre_id = np.zeros((len(songs), 4))
 for i in range(len(songs)):
     if not isinstance(songs['genre_ids'].values[i], str):

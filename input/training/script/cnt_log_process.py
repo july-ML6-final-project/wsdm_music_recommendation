@@ -1,4 +1,6 @@
+#################################################################################################
 ################################ various count features generation ##############################
+#################################################################################################
 
 import numpy as np
 import pandas as pd
@@ -16,8 +18,9 @@ song = song.merge(song_extra, on='song_id', how='left')
 
 data = train[['msno', 'song_id']].append(test[['msno', 'song_id']])
 
-
+############################################################################################
 ## compute the count of song/artist/composer/lyricist/genre/... and use the count as feature
+############################################################################################
 
 ## member_cnt
 mem_rec_cnt = data.groupby(by='msno').count()['song_id'].to_dict()
