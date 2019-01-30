@@ -20,7 +20,7 @@ Final project for July Recommendation course
     运行`codes/feature/id_process.py`将所有的categorical特征进行label encoding
 
 2. **特征生成**.
-
+	```
     1）进入`codes/feature`
     2）运行`cnt_log_process.py`生成统计类特征
     3）运行`isrc_process.py`处理歌曲特殊代码
@@ -28,15 +28,15 @@ Final project for July Recommendation course
     5）运行`timestamp_process.py`生成时序类特征
     6) 运行`before_after_process.py`生成user-song对的上下文统计特征
     7）运行`data_for_training.py`和`experiments.py`将所有生成的特征合并成可以用于训练的数据
-    
+    ```
     
     *注意*: 建议在有GPU和NVIDIA CUDA的机子上运行所有的`nn_*.py`文件。
     
 3. **模型训练**.
-
+	```
 	1）进入`codes/training`
 	2) 运行`lgb_training.py`训练LGB模型并产生预测结果数据
 	3）运行`nn_training.py`训练多个DNN模型并产生预测数据
 	4）运行`nn_ensemble.py`对DNN预测结果进行融合
 	5）运行`lgb_nn_ensemble.py`对LGB+DNN的结果进行融合并产生最终提交数据文件
-
+	```
