@@ -3,7 +3,7 @@ Final project for July Recommendation course
 
 ## 项目概述
 
-该问题是典型的推荐算法领域的CTR/CVR预估问题，适用于learning to rank框架。需要用到的features包括用户特征，物品特征和用户用品关系的上下文特征。
+该问题是典型的推荐算法领域的CTR/CVR预估问题，适用于learning to rank框架。需要用到的features包括用户特征，物品特征和用户物品关系的上下文特征。
 既可以采用传统的GBT模型，也可以采用DNN模型。
 
 
